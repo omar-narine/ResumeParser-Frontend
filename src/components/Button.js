@@ -1,7 +1,14 @@
 import PropTypes from "prop-types";
 
-const Button = () => {
-  return <div className="Button">Button</div>;
+const Button = ({ onClick, text }) => {
+  return (
+    <div>
+      <button className="Button" onClick={onClick}>
+        {" "}
+        {text}{" "}
+      </button>
+    </div>
+  );
 };
 
 export default Button;
