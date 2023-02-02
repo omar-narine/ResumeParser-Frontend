@@ -5,28 +5,32 @@ import Button from "./Button";
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
-
   const [file, setFile] = useState(" ");
-  function handleFileUpload(e) {
-    console.log(e.target.files);
-    setFile(e.target.files[0]);
-  }
+  const [hitNumber, setHitNumber] = useState(0);
 
-  var hitNumber = 0;
+  const handleFileUpload = (event) => {
+    console.log(event.target.files[0]);
+    setFile(event.target.files[0]);
+  };
 
-  function handleAPICall() {
+  const handleAPICall = () => {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("resume", file);
     formData.append("keyword", searchTerm);
 
     // NEED TO INSERT API ENDPOINT URL
     axios
-      .get("http://127.0.0.1:5000/resume-parse", formData)
+      .post("http://127.0.0.1:5000/parser/resume-parse", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
       .then((response) => {
-        hitNumber = response.data;
+        setHitNumber(response.data.message);
         console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
-  }
+  };
 
   return (
     <div className="Search-Bar">
@@ -45,7 +49,7 @@ const SearchBar = () => {
           setSearchTerm(event.target.value);
         }}
       />
-      <Button onClick={handleAPICall} />
+      <Button onClick={handleAPICall} text="Search" />
 
       <p>
         {" "}
